@@ -11,6 +11,6 @@ while (my $line = <$file>){
 	}
 }
 close($file);
-print "$count\n";
+print "$count";
 
 
