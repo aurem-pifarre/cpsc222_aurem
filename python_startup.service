@@ -1,0 +1,10 @@
+# /home/aurem/.config/systemd/user/python_startup.service
+
+[Unit]
+Description=Script for users and groups
+
+[Service]
+ExecStart=/usr/bin/python3 /home/aurem/cpsc222/cpsc222_aurem/python_api.py
+
+[Install]
+WantedBy=default.target
