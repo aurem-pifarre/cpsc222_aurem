@@ -10,6 +10,20 @@
 	$stateWithholding = $grossPay * $stateTaxRate;
 	$totalDeductions = $federalWithholding + $stateWithholding;
 	$netPay = $grossPay - $totalDeductions;
+
+	$singleFilerBrackets = [0, 10540, 45910, 127580, 212910, 542100];
+	$singleFilerRates = [0.1, 0.12, 0.22, 0.24, 0.32, 0.35, 0.37];
+
+
+	$taxableIncome = $grossPay - 12950;
+	$bracketIndex = 0;
+
+	while ($taxableIncome > 0 && $bracketIndex < count($singleFilerBrackets) - 1) {
+    	$bracketIndex++;
+    	$taxableIncome -= $singleFilerBrackets[$bracketIndex] - $singleFilerBrackets[$bracketIndex - 1];
+	}
+
+	$taxBracket = $singleFilerRates[$bracketIndex];
 ?>
 <html>
 	<head>
@@ -66,11 +80,13 @@
 			printf('<td>$%.2f</td>',$netPay);                        
                         echo "\t\t\t</tr>\n";
 
-	
+			echo "\t\t\t<tr>\n";
+			echo "\t\t\t\t<td>Federal Tax Bracket</td>\n";
+			echo "\t\t\t\t<td>" . number_format($taxBracket * 100, 2) . "%</td>\n";
+			echo "\t\t\t</tr>\n";
 
 
 			
 	?>
 	</body>
 </html>
-
