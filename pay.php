@@ -15,7 +15,7 @@
 	$singleFilerRates = [0.1, 0.12, 0.22, 0.24, 0.32, 0.35, 0.37];
 
 
-	$taxableIncome = $grossPay - 12950;
+	$taxableIncome = ($grossPay - $totalDeductions)*12;
 	$bracketIndex = 0;
 
 	while ($taxableIncome > 0 && $bracketIndex < count($singleFilerBrackets) - 1) {
