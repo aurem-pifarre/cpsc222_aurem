@@ -2,7 +2,7 @@
 	class Student{
 		private  $first_name, $last_name, $id, $courses;
 		
-		function constructor($first_name, $last_name, $id, $courses)
+		function __construct($first_name, $last_name, $id, $courses)
 		{
 		$this->setFirstName($first_name);
 		$this->setLastName($last_name);
