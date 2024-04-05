@@ -2,14 +2,9 @@
 
 	require_once 'students.php';
 	require_once 'letters.php';
-	$student1 = new Student();
-	$student2 = new Student();
-	$student3 = new Student();
-	$student1 -> constructor("Kevin", "Slonka", "1001", array("CPSC222" => 98,"CPSC111" => 76, "CPSC333" => 82));
-	$student2 -> constructor("Joe", "Schmoe", "1005", array("CPSC122" => 88, "CPSC411" => 46, "CPSC323" => 72));
-	$student3 -> constructor("Stewie", "Griffin", "1009", array("CPSC244" => 68, "CPSC116" => 96, "CPSC345" => 82));
-
-	
+	$student1 = new Student("Kevin", "Slonka", "1001", array("CPSC222" => 98,"CPSC111" => 76, "CPSC333" => 82));
+	$student2 = new Student("Joe", "Schmoe", "1005", array("CPSC122" => 88, "CPSC411" => 46, "CPSC323" => 72));
+	$student3 = new Student("Stewie", "Griffin", "1009", array("CPSC244" => 68, "CPSC116" => 96, "CPSC345" => 82));
 
 	$students = array($student1, $student2, $student3); 
 	
