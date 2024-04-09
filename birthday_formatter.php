@@ -8,8 +8,8 @@
 
 	<body>
 		<h1>Birthday Formatter</h1>
-	<?php if($_SERVER['REQUEST_METHOD'] != 'POST'){?>
-		<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+	<?php if($_SERVER['REQUEST_METHOD'] != 'POST' and $_GET['page']!=1){?>
+		<form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
 	
 		
 		<table border = 1>
@@ -135,10 +135,9 @@
 		echo $date->format('l F jS, Y - g:ia');
 		echo "<br>";
 		echo "<br>";
-		echo "<embed><a href='page_date.php?foo=bar'>Show date in ISO format</a>";
+		echo "<a href='birthday_formatter.php?page=1'>Show date in ISO format</a>";
 	}
-			
-	
+		
 	?>
 		
 	
