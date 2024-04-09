@@ -1,8 +1,4 @@
-<?php
 
-
-
-?>
 
 <html>
 	<head>
@@ -12,9 +8,11 @@
 
 	<body>
 		<h1>Birthday Formatter</h1>
+	<?php if($_SERVER['REQUEST_METHOD'] != 'POST'){?>
 		<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+	
+		
 		<table border = 1>
-
 	<?php
 		echo "\t\t\t<tr\n>";
                 echo "\t\t\t\t<td><b>Month</b></td>\n";
@@ -124,17 +122,25 @@
 	<?php 
 		echo "\t\t\t</td>";
 		echo "\t\t\t</tr>";
-		 if($_SERVER['REQUEST_METHOD'] == 'POST')
+	}
+	 if($_SERVER['REQUEST_METHOD']=='POST')
         {
-		echo $_POST["month"];                
-        }
+		if($_POST['minute']<10)
+		{
+			$minute = $_POST['minute'];
+			$minute = "0".$_POST['minute'];
+			$_POST['minute'] = $minute;
+		}
+		$date = new DateTime("{$_POST['month']}{$_POST['day']},{$_POST['year']}{$_POST['hour']}:{$_POST['minute']}{$_POST['am/pm']}");
+		echo $date->format('l F jS, Y - g:ia');
+		echo "<br>";
+		echo "<br>";
+		echo "<embed><a href='page_date.php?foo=bar'>Show date in ISO format</a>";
+	}
+			
 	
-
 	?>
 		
-	
-
-
 	
 	</body>
 </html>
