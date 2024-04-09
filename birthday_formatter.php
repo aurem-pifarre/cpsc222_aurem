@@ -8,19 +8,19 @@
 
 	<body>
 		<h1>Birthday Formatter</h1>
-	<?php if($_SERVER['REQUEST_METHOD'] != 'POST' and $_GET['page']!=1){?>
+	<?php session_start();?>
+	<?php if($_SERVER['REQUEST_METHOD'] != 'POST' and (empty($_GET['page']) || $_GET['page']!=1)){?>
 		<form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
 	
-		
 		<table border = 1>
 	<?php
 		echo "\t\t\t<tr\n>";
-                echo "\t\t\t\t<td><b>Month</b></td>\n";
-                echo "\t\t\t\t<td><b>Day</b></td>\n";
-                echo "\t\t\t\t<td><b>Year</b></td>\n";
-		echo "\t\t\t\t<td><b>Hour</b></td>\n";
-		echo "\t\t\t\t<td><b>Minute</b></td>\n";
-		echo "\t\t\t\t<td><b>AM/PM</b></td>\n";		
+                echo "\t\t\t\t<td><center><b>Month</b></td>\n";
+                echo "\t\t\t\t<td><center><b>Day</b></td>\n";
+                echo "\t\t\t\t<td><center><b>Year</b></td>\n";
+		echo "\t\t\t\t<td><center><b>Hour</b></td>\n";
+		echo "\t\t\t\t<td><center><b>Minute</b></td>\n";
+		echo "\t\t\t\t<td><center><b>AM/PM</b></td>\n";		
                	echo "\t\t\t</tr>\n";
 		
 		echo "\t\t\t<tr>\n";
@@ -53,9 +53,6 @@
                 echo "t\t\t</td>";
                         
                 ?>
-
-                        
-                      
 
                 </select>
 
@@ -123,8 +120,10 @@
 		echo "\t\t\t</td>";
 		echo "\t\t\t</tr>";
 	}
+	
 	 if($_SERVER['REQUEST_METHOD']=='POST')
         {
+		
 		if($_POST['minute']<10)
 		{
 			$minute = $_POST['minute'];
@@ -132,15 +131,21 @@
 			$_POST['minute'] = $minute;
 		}
 		$date = new DateTime("{$_POST['month']}{$_POST['day']},{$_POST['year']}{$_POST['hour']}:{$_POST['minute']}{$_POST['am/pm']}");
+		$_SESSION['date']= $date;
 		echo $date->format('l F jS, Y - g:ia');
 		echo "<br>";
 		echo "<br>";
 		echo "<a href='birthday_formatter.php?page=1'>Show date in ISO format</a>";
 	}
-		
+	else if(isset($_GET['page']) && $_GET['page'] == 1){
+		$date = $_SESSION['date'];
+		echo $date->format('Y-m-d H:i:s');
+	}
+				
 	?>
 		
 	
 	</body>
 </html>
 	
+
