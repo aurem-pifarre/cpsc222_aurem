@@ -24,6 +24,7 @@
     		if ($credentials_matched) {
         // Credentials match, do something like redirect to another page
         		$_SESSION['loggedin']=1;
+			$_SESSION['username'] = $u;
     		} else {
         		$_SESSION['loggedin']=0;
         
@@ -33,8 +34,7 @@
     		$p = '';
 	}
 	
-		
-        	
+			
 	
 	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST' && (isset($_SESSION['loggedin']) && $_SESSION['loggedin']==1)){ 
@@ -93,8 +93,9 @@
 
 
 
-	<?php if(isset($_GET['page'])){?>
-
+	<?php if(isset($_GET['page'])){
+	?>
+	
     	<html>
 
 		<head>
@@ -103,9 +104,76 @@
 		</head>
 		
 		<body>
-			<p><b>Welcome, <?php echo .'! '; ?><a href="final_logout.php">(Log Out)</a></p></b>
+			<p><b>Welcome, <?php echo $_SESSION['username'].'! '; ?><a href="final_logout.php">(Log Out)</a></p></b>
 			<p><a href="final.php">< Back to Dashboard</a></p>
+
+		<?php	if($_GET['page'] == 1){?>
+				<br>
+				<p><b>User list</b></p>
+				<table border = 1>
+        
+                		<tr>
+                		<td><center><b>Username</b></td>
+                		<td><center><b>Password</b></td>
+                		<td><center><b>UID</b></td>
+                		<td><center><b>GID</b></td>
+                		<td><center><b>Display Name</b></td>
+                		<td><center><b>Home Directory</b></td>
+				<td><center><b>Default Shell</b></td>            
+                		</tr>
+		
+			
+		
+        		<?php
+        			$file = fopen("/etc/passwd", "r") or die("Unable to open file");
+
+        // Loop through each line in the file
+        			while (($line = fgets($file)) !== false) {
+            // Split the line into its components using ":" as the delimiter
+            				$fields = explode(":", $line);
+
+            // Extract the relevant information
+            				$username = $fields[0];
+            				$password = $fields[1];
+            				$uid = $fields[2];
+            				$gid = $fields[3];
+            				$displayName = $fields[4];
+            				$homeDirectory = $fields[5];
+            				$defaultShell = $fields[6];
+
+            // Print the user information in a table row
+            				echo "<tr>";
+            				echo "<td><center>$username</td>";
+           	 			echo "<td><center>$password</td>";
+            				echo "<td><center>$uid</td>";
+            				echo "<td><center>$gid</td>";
+            				echo "<td><center>$displayName</td>";
+            				echo "<td><center>$homeDirectory</td>";
+            				echo "<td><center>$defaultShell</td>";
+            				echo "</tr>";
+        			}
+
+        // Close the file
+        			fclose($file);?>
+        
+    				</table>	
+				</body>
+		<?php } ?>
+
+		<?php if($_GET['page'] == 2){?>
+                        <br>
+                        <p><b>Group list</b></p>
+                        <table border = 1>
+
+			<tr>
+        	        <td><center><b>Group Name</b></td>
+                	<td><center><b>Password</b></td>
+                	<td><center><b>GID</b></td>
+                	<td><center><b>Members</b></td>
+
 		</body>
+		<?php} ?>
+		
 
 		<footer>
                         <hr>
@@ -115,24 +183,7 @@
 	</html>
     
 
-	<?php	}?>
+<?php	}?>
 
 
-<?php if(isset($_GET['page']) && $_GET['page'] == 2){
-
-    echo "<h1>Group List</h1>";
-
-    // display user list here
-
-}
-?>
-
-<?php if(isset($_GET['page']) && $_GET['page'] == 3){
-
-    echo "<h1>Syslog List</h1>";
-
-    // display user list here
-
-}
-?>
 
