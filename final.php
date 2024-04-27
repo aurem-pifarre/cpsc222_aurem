@@ -25,6 +25,7 @@
         // Credentials match, do something like redirect to another page
         		$_SESSION['loggedin']=1;
 			$_SESSION['username'] = $u;
+	
     		} else {
         		$_SESSION['loggedin']=0;
         
@@ -34,11 +35,8 @@
     		$p = '';
 	}
 	
-			
-	
-	
-	if ($_SERVER['REQUEST_METHOD'] == 'POST' && (isset($_SESSION['loggedin']) && $_SESSION['loggedin']==1)){ 
-?>
+	?>
+	<?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == 1 && !isset($_GET['page'])) { ?>
 	<html>
 
 		<head>
@@ -48,11 +46,11 @@
 		<body>
 			<h1>CPSC222 Final Exam</h1>
 		 
-			<p><b>Welcome, <?php echo $u.'! '; ?></b><a href="final_logout.php">(Log Out)</a></p>
+			<p><b>Welcome, <?php echo $_SESSION['username'].'! '; ?></b><a href="final_logout.php">(Log Out)</a></p>
 			<p>Dashboard:</p>
 			<ul><li><a href="?page=1">User list</a>
 			<li><a href="?page=2">Group list</a>
-			<li><a href="?page=3">Syslog></a></ul>
+			<li><a href="?page=3">Syslog</a></ul>
 					 
 		</body>
 		
@@ -63,7 +61,7 @@
 		</footer>
 
 <?php }
-	if(($_SERVER['REQUEST_METHOD']!='POST' && !isset($_GET['page']))  || (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == 0)){
+	if ((!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == 0) && (!isset($_GET['page']) || $_SERVER['REQUEST_METHOD'] == 'POST')) {
 ?>
 
 <html>
@@ -159,6 +157,13 @@
     				</table>	
 				</body>
 		<?php } ?>
+		 <footer>
+                        <hr>
+                        <?php echo "<p>".date('Y-m-d H:i:sA')."</p>"; ?>
+                </footer>
+
+        </html>
+
 
 		<?php if($_GET['page'] == 2){?>
                         <br>
@@ -170,8 +175,38 @@
                 	<td><center><b>Password</b></td>
                 	<td><center><b>GID</b></td>
                 	<td><center><b>Members</b></td>
+			</tr>
+			
 
-		</body>
+		<?php
+        			$file = fopen("/etc/group", "r") or die("Unable to open file");
+
+        // Loop through each line in the file
+        			while (($line = fgets($file)) !== false) {
+            // Split the line into its components using ":" as the delimiter
+            				$fields = explode(":", $line);
+
+            // Extract the relevant information
+            				$group = $fields[0];
+            				$password = $fields[1];
+            				$gid = $fields[2];
+            				$members = $fields[3];
+
+            // Print the user information in a table row
+            				echo "<tr>";
+            				echo "<td><center>$group</td>";
+           	 			echo "<td><center>$password</td>";
+            				echo "<td><center>$gid</td>";
+            				echo "<td><center>$members</td>";
+            				echo "</tr>";
+        			}
+
+        // Close the file
+        			fclose($file);?>
+        
+    				</table>	
+				</body>	
+		
 		<?php} ?>
 		
 
@@ -180,10 +215,60 @@
                         <?php echo "<p>".date('Y-m-d H:i:sA')."</p>"; ?>
                 </footer>
 
-	</html>
-    
+	
 
-<?php	}?>
+	<?php	if($_GET['page'] == 3){?>
+				<br>
+				<p><b>Syslog</b></p>
+				<table border = 1>
+        
+                		<tr>
+                		<td><center><b>Date</b></td>
+                		<td><center><b>Hostname</b></td>
+                		<td><center><b>Application[PID]</b></td>
+                		<td><center><b>Message</b></td>            
+                		</tr>
+		
+			
+		
+        		<?php
+        			$file = fopen("/var/log/syslog", "r") or die("Unable to open file");
+
+        // Loop through each line in the file
+        			while (($line = fgets($file)) !== false) {
+            // Split the line into its components using ":" as the delimiter
+            				$fields = explode(":", $line);
+
+            // Extract the relevant information
+            				$date = $fields[0];
+            				$hostname = $fields[1];
+            				$application = $fields[2];
+            				$message = $fields[3];
+
+            // Print the user information in a table row
+            				echo "<tr>";
+            				echo "<td><center>$date</td>";
+           	 			echo "<td><center>$hostname</td>";
+            				echo "<td><center>$application</td>";
+            				echo "<td><center>$message</td>";
+            				echo "</tr>";
+        			}
+
+        // Close the file
+        			fclose($file);?>
+        
+    				</table>	
+				</body>
+    
+		<footer>
+                        <hr>
+                        <?php echo "<p>".date('Y-m-d H:i:sA')."</p>"; ?>
+                </footer>
+
+        </html>
+
+<?php	}
+}}?>
 
 
 
