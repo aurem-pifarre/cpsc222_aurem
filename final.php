@@ -46,7 +46,7 @@
 		<body>
 			<h1>CPSC222 Final Exam</h1>
 		 
-			<p><b>Welcome, <?php echo $_SESSION['username'].'! '; ?></b><a href="final_logout.php">(Log Out)</a></p>
+			<p><b>Welcome, <?php echo $_SESSION['username'].'! '; ?><a href="final_logout.php">(Log Out)</a></p></b>
 			<p>Dashboard:</p>
 			<ul><li><a href="?page=1">User list</a>
 			<li><a href="?page=2">Group list</a>
@@ -65,24 +65,26 @@
 ?>
 
 <html>
+
 	<head>
 		<title>Final</title>
 	</head>
 	<body>
+		
 		<h1>CPSC222 Final Exam</h1>
 
 		<form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
                 <table>
                 <tr><td>Username:</td><td><center> <input type="text" name="username"></td></tr>
                 <tr><td>Password:</td><td><center> <input type="text" name="password"></td></tr>
-		<tr><td><input type="submit" name="submit" value="Login" /></td>
+		<tr><td><input type="submit" name="submit"  value="Login" /></td>
 		</form>
 		</table>
 		
 	</body>
 	<footer>
 		<hr>
-		<?php echo "<p>".date('Y-m-d H:i:sA')."</p>"; ?>
+		<?php echo "<p style='font-family:helvetica'>".date('Y-m-d H:i:s A')."</p>"; ?>
 	</footer>
 
 </html>
@@ -104,6 +106,22 @@
 		<body>
 			<p><b>Welcome, <?php echo $_SESSION['username'].'! '; ?><a href="final_logout.php">(Log Out)</a></p></b>
 			<p><a href="final.php">< Back to Dashboard</a></p>
+
+		<?php if($_GET['page']>=4){?>
+			<p>Invalid page</p>
+
+			</body>
+			<footer>
+				<hr>
+                        	<?php echo "<p>".date('Y-m-d H:i:s A')."</p>"; ?>
+                	</footer>
+
+        	</html>
+		<?php }?>
+		
+
+
+		
 
 		<?php	if($_GET['page'] == 1){?>
 				<br>
@@ -156,15 +174,15 @@
         
     				</table>	
 				</body>
-		<?php } ?>
+		
 		 <footer>
                         <hr>
-                        <?php echo "<p>".date('Y-m-d H:i:sA')."</p>"; ?>
+                        <?php echo "<p>".date('Y-m-d H:i:s A')."</p>"; ?>
                 </footer>
 
         </html>
 
-
+	<?php } ?>
 		<?php if($_GET['page'] == 2){?>
                         <br>
                         <p><b>Group list</b></p>
@@ -207,68 +225,69 @@
     				</table>	
 				</body>	
 		
-		<?php} ?>
+	
 		
 
-		<footer>
-                        <hr>
-                        <?php echo "<p>".date('Y-m-d H:i:sA')."</p>"; ?>
-                </footer>
+				<footer>
+                        	<hr>
+                        	<?php echo "<p>".date('Y-m-d H:i:s A')."</p>"; ?>
+                		</footer>
+
+			</html>
+
+		<?php }?>
+
+		<?php if ($_GET['page'] == 3) { ?>
+    			<br>
+    			<p><b>Syslog</b></p>
+    			<table border="1">
+        		<tr>
+            		<td><center><b>Date</b></td>
+            		<td><center><b>Hostname</b></td>
+            		<td><center><b>Application[PID]</b></td>
+            		<td><center><b>Message</b></td>
+        </tr>
+
+        <?php
+        $file = fopen("/var/log/syslog", "r") or die("Unable to open file");
+
+         while (($line = fgets($file)) !== false) {
+        // Extract date, hostname, application, and message using regex
+        preg_match('/^(\S+\s+\d+\s+\d+:\d+:\d+)\s+([\w.-]+)\s+([^[]+)\s+(\[[^\]]+\])\s+(.*)$/', $line, $matches);
+        if (count($matches) < 6) {
+            continue; // Skip lines that don't match the pattern
+        }
+        $date = trim($matches[1]);
+        $hostname = trim($matches[2]);
+        $application = trim($matches[3], ':');
+        $message = trim($matches[5]);
 
 	
 
-	<?php	if($_GET['page'] == 3){?>
-				<br>
-				<p><b>Syslog</b></p>
-				<table border = 1>
-        
-                		<tr>
-                		<td><center><b>Date</b></td>
-                		<td><center><b>Hostname</b></td>
-                		<td><center><b>Application[PID]</b></td>
-                		<td><center><b>Message</b></td>            
-                		</tr>
-		
-			
-		
-        		<?php
-        			$file = fopen("/var/log/syslog", "r") or die("Unable to open file");
-
-        // Loop through each line in the file
-        			while (($line = fgets($file)) !== false) {
-            // Split the line into its components using ":" as the delimiter
-            				$fields = explode(":", $line);
-
-            // Extract the relevant information
-            				$date = $fields[0];
-            				$hostname = $fields[1];
-            				$application = $fields[2];
-            				$message = $fields[3];
-
-            // Print the user information in a table row
-            				echo "<tr>";
-            				echo "<td><center>$date</td>";
-           	 			echo "<td><center>$hostname</td>";
-            				echo "<td><center>$application</td>";
-            				echo "<td><center>$message</td>";
-            				echo "</tr>";
-        			}
+            // Print the syslog entry in a table row
+            echo "<tr>";
+            echo "<td><center>$date</td>";
+            echo "<td><center>$hostname</td>";
+            echo "<td><center>$application</td>";
+            echo "<td><center>$message</td>";
+            echo "</tr>";
+        }
 
         // Close the file
-        			fclose($file);?>
-        
-    				</table>	
-				</body>
-    
-		<footer>
-                        <hr>
-                        <?php echo "<p>".date('Y-m-d H:i:sA')."</p>"; ?>
-                </footer>
+        fclose($file);
+        ?>
+    </table>
+    </body>
 
-        </html>
+    <footer>
+        <hr>
+        <?php echo "<p>" . date('Y-m-d H:i:s A') . "</p>"; ?>
+    </footer>
+    </html>
+<?php }
 
-<?php	}
-}}?>
+} ?>
+
 
 
 
